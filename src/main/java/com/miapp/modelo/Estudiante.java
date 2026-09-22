@@ -3,13 +3,14 @@ package com.miapp.modelo;
 /**
  * Modelo: representa la entidad Estudiante.
  */
-public final class Estudiante {  
+public final class Estudiante extends Persona{  
 
     private static int totalEstudiantes = 0;
     public static final int PROMEDIO_MINIMO = 0;
     public static final int PROMEDIO_MAXIMO = 5;
     public static final String CARRERA_PREDETERMINADA = "Sin especificar";
-
+    public static final int MAX_MATERIAS = 9 ;
+    
     // ── Atributos de instancia ────────────────────────────────────────────────
     private int    id;
     private String nombre;

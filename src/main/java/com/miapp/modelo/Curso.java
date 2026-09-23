@@ -4,6 +4,8 @@
  */
 package com.miapp.modelo;
 
+import java.util.List;
+
 /**
  *
  * @author Estudiante
@@ -11,15 +13,18 @@ package com.miapp.modelo;
 public class Curso {
     private String codigo;
     private String credito;
+    private List <Estudiante> estudiantes;
 
     public Curso() {
     }
 
-    public Curso(String codigo, String credito) {
+    public Curso(String codigo, String credito, List<Estudiante> estudiantes) {
         this.codigo = codigo;
         this.credito = credito;
+        this.estudiantes = estudiantes;
     }
 
+   
     public String getCodigo() {
         return codigo;
     }
@@ -35,6 +40,17 @@ public class Curso {
     public void setCredito(String credito) {
         this.credito = credito;
     }
+
+    public List<Estudiante> getEstudiantes() {
+        return estudiantes;
+    }
+
+    public void setEstudiantes(List<Estudiante> estudiantes) {
+        this.estudiantes = estudiantes;
+    }
     
+    public void agregarEstudiante (Estudiante estudiantes) {
+     
+       }
     
 }

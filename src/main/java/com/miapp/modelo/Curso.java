@@ -4,6 +4,7 @@
  */
 package com.miapp.modelo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,19 +13,19 @@ import java.util.List;
  */
 public class Curso {
     private String codigo;
-    private String credito;
-    private List <Estudiante> estudiantes;
+    private int credito;
+    private List<Estudiante> estudiantes;
 
     public Curso() {
+        this.estudiantes = new ArrayList<>();
     }
 
-    public Curso(String codigo, String credito, List<Estudiante> estudiantes) {
+    public Curso(String codigo, int credito) {
         this.codigo = codigo;
         this.credito = credito;
-        this.estudiantes = estudiantes;
+        this.estudiantes = new ArrayList<>();
     }
 
-   
     public String getCodigo() {
         return codigo;
     }
@@ -33,11 +34,11 @@ public class Curso {
         this.codigo = codigo;
     }
 
-    public String getCredito() {
+    public int getCredito() {
         return credito;
     }
 
-    public void setCredito(String credito) {
+    public void setCredito(int credito) {
         this.credito = credito;
     }
 
@@ -49,8 +50,9 @@ public class Curso {
         this.estudiantes = estudiantes;
     }
     
-    public void agregarEstudiante (Estudiante estudiantes) {
-     
-       }
-    
+    public void agregarEstudiante(Estudiante estudiante) {
+        if (!this.estudiantes.contains(estudiante)) {
+            this.estudiantes.add(estudiante);
+        }
+    }
 }

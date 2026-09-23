@@ -21,9 +21,9 @@ public abstract class  Persona {
     }
     
     
-    public void calcularPago() {
+    public abstract double calcularPago();
            
-        }
+        
 
     public String getNombre() {
         return nombre;

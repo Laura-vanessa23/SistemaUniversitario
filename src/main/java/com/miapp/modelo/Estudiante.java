@@ -1,9 +1,12 @@
 package com.miapp.modelo;
 
+import com.miapp.servicios.Inscribible;
+import java.util.List;
+import java.util.ArrayList;
 /**
  * Modelo: representa la entidad Estudiante.
  */
-public final class Estudiante extends Persona{  
+public final class Estudiante extends Persona implements Inscribible {  
 
     private static int totalEstudiantes = 0;
     public static final int PROMEDIO_MINIMO = 0;
@@ -12,19 +15,19 @@ public final class Estudiante extends Persona{
     public static final int MAX_MATERIAS = 9 ;
     
     // ── Atributos de instancia ────────────────────────────────────────────────
-    private int    id;
-    private String nombre;
     private String apellido;
     private String carrera;
     private double promedio;
+    private List<Curso> cursosInscritos;
+    
 
     // ── Constructor ───────────────────────────────────────────────────────────
 
-    public Estudiante(int id, String nombre, String apellido, String carrera, double promedio) {
-        this.id       = id;
-        this.nombre   = nombre;
+   public Estudiante(int id, String nombre, String apellido, String carrera, double promedio) {
+        super(nombre, id); // Usamos 'super' para enviarle nombre e id a la clase Persona
         this.apellido = apellido;
         this.carrera  = carrera;
+        this.cursosInscritos = new ArrayList<>(); // Inicializamos la lista de cursos
    
         if (promedio >= PROMEDIO_MINIMO && promedio <= PROMEDIO_MAXIMO) {
             this.promedio = promedio;
@@ -32,7 +35,6 @@ public final class Estudiante extends Persona{
             this.promedio = 0.0;  // Por defecto si está fuera de rango
         }
         
-        // nuevo: Incrementa el contador estático de estudiantes
         totalEstudiantes++;
     }
 
@@ -53,14 +55,6 @@ public final class Estudiante extends Persona{
 
     // ── Getters ──────────────────────────────────────────────────────────────
 
-    public int getId() { 
-        return id; 
-    }
-
-    public String getNombre() { 
-        return nombre; 
-    }
-
     public String getApellido() {
         return apellido;
     }
@@ -75,13 +69,6 @@ public final class Estudiante extends Persona{
 
     // ── Setters ──────────────────────────────────────────────────────────────
 
-    public void setId(int id) { 
-        this.id = id; 
-    }
-
-    public void setNombre(String nombre) { 
-        this.nombre = nombre; 
-    }
 
     public void setApellido(String apellido) { 
         this.apellido = apellido; 
@@ -105,12 +92,34 @@ public final class Estudiante extends Persona{
     /**
      Método final: no puede ser sobrescrito por subclases
      */
-    @Override
+    
+    
     public final String toString() {
         return "ID: " + id
-             + " | Nombre: " + nombre
+             + " | Nombre: " + getNombre()
              + " | Apellido: " + apellido   
              + " | Carrera: " + carrera
              + " | Promedio: " + String.format("%.2f", promedio);
     }
+
+    @Override
+    public boolean inscribir(Curso curso) {
+        // Validamos que no supere el máximo de materias y que no esté ya inscrito
+        if (cursosInscritos.size() < MAX_MATERIAS && !cursosInscritos.contains(curso)) {
+            cursosInscritos.add(curso);
+            curso.agregarEstudiante(this); // Mantiene la relación bidireccional N:M
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public double calcularPago() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    boolean contains(Estudiante estudiantes) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
 }

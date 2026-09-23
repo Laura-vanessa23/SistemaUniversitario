@@ -4,6 +4,7 @@
  */
 package com.miapp.modelo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,29 +13,44 @@ import java.util.List;
  */
 public  class  Profesor extends Persona {
      private final  double salarioBase ;
-     private List<Curso> cursosasignados;
+     private List<Curso> cursosAsignados;
 
     public Profesor() {
         super();
         this.salarioBase = 0;
+        this.cursosAsignados = new ArrayList<>();
     }
 
     public Profesor(double salarioBase, String nombre, int id) {
         super(nombre, id);
         this.salarioBase = salarioBase;
+        this.cursosAsignados = new ArrayList<>();
     }
 
-    public double calcularpago(){
+    public double getSalarioBase() {
         return salarioBase;
-    } 
+    }
+
+    
+    public List<Curso> getCursosAsignados() {
+        return cursosAsignados;
+    }
+
+    public void setCursosAsignados(List<Curso> cursosAsignados) {
+        this.cursosAsignados = cursosAsignados;
+    }
+
+    
+    @Override
+    public double calcularPago() {
+        return salarioBase;
+    }
     
     public void impartirClase() {
-        System.out.print("El profesor " + getnombre() + "esta impartiendo su clase ");
+        System.out.print("El profesor " + getNombre() + "esta impartiendo su clase ");
     }
-
-    private String getnombre() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+    
+   
      
     
 }

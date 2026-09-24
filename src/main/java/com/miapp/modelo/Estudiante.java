@@ -1,6 +1,7 @@
 package com.miapp.modelo;
 
 import com.miapp.servicios.Inscribible;
+import com.miapp.utilidades.EstadoMatricula;
 import java.util.List;
 import java.util.ArrayList;
 /**
@@ -19,6 +20,7 @@ public final class Estudiante extends Persona implements Inscribible {
     private String carrera;
     private double promedio;
     private List<Curso> cursosInscritos;
+    private  EstadoMatricula estadoMatricula;
     
 
     // ── Constructor ───────────────────────────────────────────────────────────
@@ -28,6 +30,7 @@ public final class Estudiante extends Persona implements Inscribible {
         this.apellido = apellido;
         this.carrera  = carrera;
         this.cursosInscritos = new ArrayList<>(); // Inicializamos la lista de cursos
+        this.estadoMatricula  = EstadoMatricula.ACTIVO ;
    
         if (promedio >= PROMEDIO_MINIMO && promedio <= PROMEDIO_MAXIMO) {
             this.promedio = promedio;

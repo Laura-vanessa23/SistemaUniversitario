@@ -70,6 +70,27 @@ public class EstudianteView extends JFrame {
     private DefaultTableModel      modeloTabla;
     private JLabel                 lblEstado;
     private JLabel                 lblTotalEstudiantes;
+    
+    // ── Componentes UI - Cursos ───────────────────────────────────────────────
+    private JComboBox<String>       cmbCursos;
+    private JButton                 btnVerEstudiantesCurso;
+    private JButton                 btnInscribirCurso;
+    private JLabel                  lblProfesorAsignado;
+    
+    // ── Componentes UI - Profesores ───────────────────────────────────────────
+    private JTextField              txtProfesorNombre;
+    private JTextField              txtProfesorApellido;
+    private JTextField              txtProfesorSalario;
+    private JButton                 btnAgregarProfesor;
+    private JComboBox<String>       cmbProfesorAsignar;
+    private JButton                 btnVerCursosProfesor;
+    private JComboBox<String>       cmbCursoAsignar;
+    private JButton                 btnAsignarCursoProfesor;
+    
+    // ── Componentes UI - Estados de Matrícula ─────────────────────────────────
+    private JComboBox<String>       cmbEstadoMatricula;
+    private JButton                 btnBuscarEstado;
+    private JButton                 btnCambiarEstado;
 
     // ── Controlador ───────────────────────────────────────────────────────────
     private EstudianteController controlador;
@@ -168,11 +189,7 @@ public class EstudianteView extends JFrame {
         panelAgregar.add(spinPromedio);
         panelAgregar.add(btnAgregar);
 
-        // Panel superior con GridLayout (3 filas, 1 columna)
-        JPanel panelSuperior = new JPanel(new GridLayout(3, 1, 5, 5));
-        panelSuperior.add(panelBusqueda);
-        panelSuperior.add(panelCarrera);
-        panelSuperior.add(panelAgregar);
+      
 
         // ────────────────────────────────────────────────────────────────────────
         // PANEL CENTRAL: Tabla de resultados
@@ -207,22 +224,117 @@ public class EstudianteView extends JFrame {
 
         panelInferior.add(lblEstado, BorderLayout.WEST);
         panelInferior.add(lblTotalEstudiantes, BorderLayout.EAST);
+        
+        // ────────────────────────────────────────────────────────────────────────
+        // PANEL: Cursos: inscripción y consulta
+        // ────────────────────────────────────────────────────────────────────────
+       
+        JPanel panelCursos = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
+        panelCursos.setBorder(BorderFactory.createTitledBorder("Cursos: inscripción y consulta"));
+
+        cmbCursos = new JComboBox<>();
+        cmbCursos.addItem("Cosmetología y Uñas");       
+        cmbCursos.addItem("Sistemas e Informática");   
+        cmbCursos.addItem("Desarrollo de Software"); 
+        cmbCursos.addItem("Administración de Empresas");       
+
+        btnVerEstudiantesCurso = new JButton("Ver estudiantes del curso");
+        btnInscribirCurso = new JButton("Inscribir en curso");
+        btnInscribirCurso.setBackground(new Color(255, 152, 0)); // Naranja
+        btnInscribirCurso.setForeground(Color.WHITE);
+        btnInscribirCurso.setFocusPainted(false);
+
+        lblProfesorAsignado = new JLabel("(primero busca y selecciona un estudiante en la tabla) Profesor asignado: (ninguno)");
+
+        panelCursos.add(new JLabel("Curso:"));
+        panelCursos.add(cmbCursos);
+        panelCursos.add(btnVerEstudiantesCurso);
+        panelCursos.add(btnInscribirCurso);
+        panelCursos.add(lblProfesorAsignado);
+        // ────────────────────────────────────────────────────────────────────────
+        // PANEL: Profesores: agregar y asignar a curso
+        // ────────────────────────────────────────────────────────────────────────
+        JPanel panelProfesores = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
+        panelProfesores.setBorder(BorderFactory.createTitledBorder("Profesores: agregar y asignar a curso"));
+
+        txtProfesorNombre = new JTextField(10);
+        txtProfesorSalario = new JTextField("3.000.000", 8);
+        btnAgregarProfesor = new JButton("Agregar Profesor");
+
+        cmbProfesorAsignar = new JComboBox<>();
+        cmbProfesorAsignar.addItem("Mg. Jorge Salcedo"); // Ejemplo
+
+        btnVerCursosProfesor = new JButton("Ver cursos del profesor");
+        
+        cmbCursoAsignar = new JComboBox<>();
+        cmbCursoAsignar.addItem("SIS101");
+
+        btnAsignarCursoProfesor = new JButton("Asignar a curso");
+        btnAsignarCursoProfesor.setBackground(new Color(59, 139, 212));
+        btnAsignarCursoProfesor.setForeground(Color.WHITE);
+        btnAsignarCursoProfesor.setFocusPainted(false);
+
+        panelProfesores.add(new JLabel("Nombre:"));
+        panelProfesores.add(txtProfesorNombre);
+        panelProfesores.add(new JLabel("Salario base:"));
+        panelProfesores.add(txtProfesorSalario);
+        panelProfesores.add(btnAgregarProfesor);
+        panelProfesores.add(new JLabel("Profesor:"));
+        panelProfesores.add(cmbProfesorAsignar);
+        panelProfesores.add(btnVerCursosProfesor);
+        panelProfesores.add(new JLabel("Curso a asignar:"));
+        panelProfesores.add(cmbCursoAsignar);
+        panelProfesores.add(btnAsignarCursoProfesor);
 
         // ────────────────────────────────────────────────────────────────────────
-        // Agregar todo al JFrame
+        // PANEL: Estado de matrícula: buscar y cambiar
         // ────────────────────────────────────────────────────────────────────────
+        JPanel panelEstadoMatricula = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
+        panelEstadoMatricula.setBorder(BorderFactory.createTitledBorder("Estado de matrícula: buscar y cambiar"));
 
+        cmbEstadoMatricula = new JComboBox<>();
+        cmbEstadoMatricula.addItem("Seleccionar...");
+        cmbEstadoMatricula.addItem("ACTIVO");
+        cmbEstadoMatricula.addItem("INACTIVO");
+
+        btnBuscarEstado = new JButton("Buscar por estado");
+        btnBuscarEstado.setBackground(new Color(76, 175, 80)); // Verde
+        btnBuscarEstado.setForeground(Color.WHITE);
+        btnBuscarEstado.setFocusPainted(false);
+
+        btnCambiarEstado = new JButton("Cambiar estado");
+
+        panelEstadoMatricula.add(new JLabel("Nuevo estado:"));
+        panelEstadoMatricula.add(cmbEstadoMatricula);
+        panelEstadoMatricula.add(btnBuscarEstado);
+        panelEstadoMatricula.add(btnCambiarEstado);
+        panelEstadoMatricula.add(new JLabel("(\"Cambiar estado\" requiere seleccionar un estudiante en la tabla)"));
+        
+       // ────────────────────────────────────────────────────────────────────────
+        // PANEL SUPERIOR (Agrupa los 6 paneles en 6 filas)
+        // ────────────────────────────────────────────────────────────────────────
+        JPanel panelSuperior = new JPanel(new GridLayout(6, 1, 5, 5)); // Usamos 6 filas para que quepan todos
+        panelSuperior.add(panelBusqueda);
+        panelSuperior.add(panelCarrera);
+        panelSuperior.add(panelAgregar);
+        panelSuperior.add(panelCursos);
+        panelSuperior.add(panelProfesores);
+        panelSuperior.add(panelEstadoMatricula);
+
+        // ────────────────────────────────────────────────────────────────────────
+        // Agregar todo al JFrame (Aquí es donde realmente se usa el panelSuperior)
+        // ────────────────────────────────────────────────────────────────────────
         add(panelSuperior,    BorderLayout.NORTH);
         add(scroll,           BorderLayout.CENTER);
         add(panelInferior,    BorderLayout.SOUTH);
-    }
 
+    }
     // ── Métodos de inicialización ─────────────────────────────────────────────
 
     /**
      * Carga las carreras disponibles desde el controlador al combo de búsqueda.
      */
-    private void cargarCarreras() {
+        private void cargarCarreras() {
         if (controlador != null) {
             String[] carreras = controlador.obtenerCarrerasUnicas();
             for (String carrera : carreras) {
@@ -291,6 +403,22 @@ public class EstudianteView extends JFrame {
                     spinPromedio.setValue(3.0);
                     actualizarTotalEstudiantes();
                 }
+            }
+        });
+        
+        // Evento: Inscribir estudiante seleccionado a un curso
+        btnInscribirCurso.addActionListener((ActionEvent e) -> {
+            if (controlador != null) {
+                int filaSeleccionada = tblResultados.getSelectedRow();
+                if (filaSeleccionada == -1) {
+                    mostrarError("Primero busca y selecciona un estudiante en la tabla.");
+                    return;
+                }
+                
+                int idEstudiante = (int) modeloTabla.getValueAt(filaSeleccionada, 0);
+                String cursoSeleccionado = (String) cmbCursos.getSelectedItem();
+
+                controlador.inscribirEstudianteACurso(idEstudiante, cursoSeleccionado);
             }
         });
     }

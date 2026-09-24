@@ -1,11 +1,15 @@
 package com.miapp.controlador;
 
+import com.miapp.modelo.Curso;
 import com.miapp.modelo.Estudiante;
+import com.miapp.modelo.Profesor;
 import com.miapp.servicios.IBuscador;
 import com.miapp.vista.EstudianteView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class EstudianteController implements IBuscador {
@@ -21,6 +25,12 @@ public class EstudianteController implements IBuscador {
 
     // ── Array de estudiantes (fuente de datos) ────────────────────────────────
     private Estudiante[] estudiantes;
+    // ── Lista de Cursos (para la asociación N:M) ─────────────────────────────
+    private List<Curso> cursosDisponibles;
+
+    // ── Lista de Profesores y asignaciones ────────────────────────────────────
+    private List<Profesor> profesoresDisponibles;
+    private Map<String, Profesor> cursosConProfesor;
 
     // ── Constructor ───────────────────────────────────────────────────────────
 
@@ -57,21 +67,69 @@ public class EstudianteController implements IBuscador {
         // Reinicia el contador estático de Estudiante antes de cargar nuevos datos
         Estudiante.reiniciarContador();
 
-        estudiantes[0]  = new Estudiante(1,  "Ana ","García",        "Ingeniería de Sistemas",  4.5);
-        estudiantes[1]  = new Estudiante(2,  "Carlos"," López",      "Ingeniería Civil",        3.8);
-        estudiantes[2]  = new Estudiante(3,  "María", "Rodríguez",   "Medicina",                4.9);
-        estudiantes[3]  = new Estudiante(4,  "José ","Martínez",     "Derecho",                 3.5);
-        estudiantes[4]  = new Estudiante(5,  "Laura ","Sánchez",     "Administración",          4.1);
-        estudiantes[5]  = new Estudiante(6,  "Andrés ","Torres",     "Ingeniería de Sistemas",  3.9);
-        estudiantes[6]  = new Estudiante(7,  "Valentina ","Gómez",   "Psicología",              4.3);
-        estudiantes[7]  = new Estudiante(8,  "Luis ","Herrera",      "Economía",                3.7);
-        estudiantes[8]  = new Estudiante(9,  "Sofía ","Díaz",        "Ingeniería Civil",        4.6);
-        estudiantes[9]  = new Estudiante(10, "Juliana ","Morales",   "Medicina",                4.8);
-        estudiantes[10] = new Estudiante(11, "Ana Milena ","Ruiz",   "Derecho",                 4.0);
-        estudiantes[11] = new Estudiante(12, "Carlos Andrés ","Paz", "Administración",          3.6);
+        estudiantes[0]  = new Estudiante(1,  "Ana ","García",        "Ingeniería de Sistemas",   4.5);
+        estudiantes[1]  = new Estudiante(2,  "Carlos"," López",      "Ingeniería Civil",         3.8);
+        estudiantes[2]  = new Estudiante(3,  "María", "Rodríguez",   "Medicina",                 4.9);
+        estudiantes[3]  = new Estudiante(4,  "José ","Martínez",     "Derecho",                  3.5);
+        estudiantes[4]  = new Estudiante(5,  "Laura ","Sánchez",     "Administración",           4.1);
+        estudiantes[5]  = new Estudiante(6,  "Andrés ","Torres",     "Ingeniería de Sistemas",   3.9);
+        estudiantes[6]  = new Estudiante(7,  "Valentina ","Gómez",   "Psicología",               4.3);
+        estudiantes[7]  = new Estudiante(8,  "Luis ","Herrera",      "Economía",                 3.7);
+        estudiantes[8]  = new Estudiante(9,  "Sofía ","Díaz",        "Ingeniería Civil",         4.6);
+        estudiantes[9]  = new Estudiante(10, "Juliana ","Morales",   "Medicina",                 4.8);
+        estudiantes[10] = new Estudiante(11, "Ana Milena ","Ruiz",   "Derecho",                  4.0);
+        estudiantes[11] = new Estudiante(12, "Carlos Andrés ","Paz", "Administración",           3.6);
+        
+        // Inicializar la lista de cursos disponibles
+        this.cursosDisponibles = new ArrayList<>();
+        cursosDisponibles.add(new Curso("Cosmetología y Uñas", 3));
+        cursosDisponibles.add(new Curso("Sistemas e Informática", 4));
+        cursosDisponibles.add(new Curso("Desarrollo de Software", 4));
+        cursosDisponibles.add(new Curso("Estilismo y Pelo", 3));
+
+        // Inicializar la lista de profesores y asignaciones
+        this.profesoresDisponibles = new ArrayList<>();
+        this.cursosConProfesor = new HashMap<>();
 
         // Log: informa cuántos estudiantes se cargaron usando static getTotalEstudiantes()
         System.out.println("Total de estudiantes cargados: " + Estudiante.getTotalEstudiantes());
+    }
+    
+    
+    // ── Lógica de Inscripción (Conecta Estudiante, Curso e Inscribible) ───────
+    public boolean inscribirEstudianteACurso(int idEstudiante, String nombreCurso) {
+        // 1. Buscar el estudiante por su ID
+        Estudiante estudiante = obtenerEstudiantePorId(idEstudiante);
+        if (estudiante == null) {
+            vista.mostrarError("Estudiante no encontrado.");
+            return false;
+        }
+
+        // 2. Buscar el curso por su nombre
+        Curso cursoEncontrado = null;
+        for (Curso c : cursosDisponibles) {
+            if (c.getCodigo().equalsIgnoreCase(nombreCurso)) {
+                cursoEncontrado = c;
+                break;
+            }
+        }
+
+        if (cursoEncontrado == null) {
+            vista.mostrarError("El curso '" + nombreCurso + "' no existe.");
+            return false;
+        }
+
+        // 3. Ejecutar el método de la interfaz Inscribible que implementa Estudiante
+        boolean exito = estudiante.inscribir(cursoEncontrado);
+        
+        if (exito) {
+            vista.mostrarMensaje("¡Inscripción exitosa! El estudiante " + estudiante.getNombre() +  
+                                 " se inscribió en el curso " + cursoEncontrado.getCodigo());
+        } else {
+            vista.mostrarError("No se pudo realizar la inscripción (límite de materias alcanzado o ya inscrito).");
+        }
+
+        return exito;
     }
 
     // ── Lógica de búsqueda ────────────────────────────────────────────────────
@@ -209,5 +267,52 @@ public class EstudianteController implements IBuscador {
                             Estudiante.getTotalEstudiantes());
 
         return true;
+    }
+
+    // ── Lógica de Profesores ──────────────────────────────────────────────────
+
+    public boolean agregarProfesor(String nombre, double salario) {
+        if (nombre == null || nombre.trim().isEmpty()) {
+            return false;
+        }
+        
+        Profesor nuevoProfesor = new Profesor(salario, nombre.trim(), 0);
+        profesoresDisponibles.add(nuevoProfesor);
+        
+        vista.mostrarMensaje("Profesor " + nombre + " agregado con éxito.");
+        return true;
+    }
+
+    public List<String> obtenerNombresProfesores() {
+        List<String> nombres = new ArrayList<>();
+        for (Profesor p : profesoresDisponibles) {
+            nombres.add(p.getNombre());
+        }
+        return nombres;
+    }
+
+    public boolean asignarProfesorACurso(String nombreProfesor, String nombreCurso) {
+        Profesor profesorEncontrado = null;
+        for (Profesor p : profesoresDisponibles) {
+            if (p.getNombre().equalsIgnoreCase(nombreProfesor)) {
+                profesorEncontrado = p;
+                break;
+            }
+        }
+
+        if (profesorEncontrado == null) {
+            vista.mostrarError("El profesor seleccionado no existe.");
+            return false;
+        }
+
+        cursosConProfesor.put(nombreCurso, profesorEncontrado);
+        
+        vista.mostrarMensaje("¡Profesor " + profesorEncontrado.getNombre() + 
+                             " asignado exitosamente al curso de " + nombreCurso + "!");
+        return true;
+    }
+    
+    public Profesor obtenerProfesorDelCurso(String nombreCurso) {
+        return cursosConProfesor.get(nombreCurso);
     }
 }

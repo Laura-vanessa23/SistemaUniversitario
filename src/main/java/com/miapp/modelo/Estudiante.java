@@ -22,24 +22,22 @@ public final class Estudiante extends Persona implements Inscribible {
     // ── Atributos de instancia ────────────────────────────────────────────────
     private String carrera;
     private double promedio;
-    private String estadoMatricula;
     private List<Curso> cursosInscritos;
-    private  EstadoMatricula estadoMatricula;
+    private EstadoMatricula estadoMatricula;
     
 
     // ── Constructor ───────────────────────────────────────────────────────────
 
-    public Estudiante(int id, String nombre, String apellido, String carrera, double promedio, String estadoMatricula) {
-        super(nombre, apellido, id); // Usamos 'super' para enviar nombre, apellido e id a la clase Persona
-        this.carrera  = carrera;
-        this.estadoMatricula = estadoMatricula;
-        this.cursosInscritos = new ArrayList<>(); // Inicializamos la lista de cursos
-        this.estadoMatricula  = EstadoMatricula.ACTIVO ;
+    public Estudiante(int id, String nombre, String apellido, String carrera, double promedio, EstadoMatricula estadoMatricula) {
+        super(nombre, apellido, id);
+        this.carrera = carrera;
+        this.cursosInscritos = new ArrayList<>();
+        this.estadoMatricula = (estadoMatricula != null) ? estadoMatricula : EstadoMatricula.ACTIVO;
    
         if (promedio >= PROMEDIO_MINIMO && promedio <= PROMEDIO_MAXIMO) {
             this.promedio = promedio;
         } else {
-            this.promedio = 0.0;  // Por defecto si está fuera de rango
+            this.promedio = 0.0;
         }
         
         totalEstudiantes++;
@@ -57,7 +55,6 @@ public final class Estudiante extends Persona implements Inscribible {
 
     public static int getProximoId() {  
         return totalEstudiantes + 1;
-    
     }
 
     // ── Getters ──────────────────────────────────────────────────────────────
@@ -70,7 +67,7 @@ public final class Estudiante extends Persona implements Inscribible {
         return promedio; 
     }
 
-    public String getEstadoMatricula() {
+    public EstadoMatricula getEstadoMatricula() {
         return estadoMatricula;
     }
 
@@ -84,24 +81,16 @@ public final class Estudiante extends Persona implements Inscribible {
         this.carrera = carrera; 
     }
 
-    public void setEstadoMatricula(String estadoMatricula) {
+    public void setEstadoMatricula(EstadoMatricula estadoMatricula) {
         this.estadoMatricula = estadoMatricula;
     }
 
-    /**
-     Valida el promedio antes de asignarlo usando constantes finales
-     * @param p promedio a validar (debe estar entre PROMEDIO_MINIMO y PROMEDIO_MAXIMO)
-     */
     public void setPromedio(double p) {
         if (p >= PROMEDIO_MINIMO && p <= PROMEDIO_MAXIMO) {
             this.promedio = p;
         }
     }
 
-    /**
-     Método final: no puede ser sobrescrito por subclases
-     */
-    
     public final String toString() {
         return "ID: " + id
              + " | Nombre: " + getNombre()
@@ -115,7 +104,7 @@ public final class Estudiante extends Persona implements Inscribible {
     public boolean inscribir(Curso curso) {
         if (cursosInscritos.size() < MAX_MATERIAS && !cursosInscritos.contains(curso)) {
             cursosInscritos.add(curso);
-            curso.agregarEstudiante(this); // Mantiene la relación bidireccional N:M
+            curso.agregarEstudiante(this);
             return true;
         }
         return false;

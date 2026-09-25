@@ -8,6 +8,7 @@ import com.miapp.modelo.Curso;
 import com.miapp.modelo.Estudiante;
 import com.miapp.modelo.Profesor;
 import com.miapp.servicios.IBuscador;
+import com.miapp.utilidades.EstadoMatricula;
 import com.miapp.vista.EstudianteView;
 
 import java.util.ArrayList;
@@ -15,14 +16,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 public class EstudianteController implements IBuscador {
 
     // ── Constantes finales ────────────────────────────────────────────────────
     private static final int CANTIDAD_ESTUDIANTES_INICIALES = 12;
     private static final String MENSAJE_BUSQUEDA_VACIA = "Por favor ingrese un nombre para buscar.";
     private static final String MENSAJE_BUSQUEDA_CARRERA_VACIA = "Por favor seleccione una carrera para buscar.";
-    private static final String MENSAJE_SIN_RESULTADOS = "No se encontraron estudiantes con ese criterio.";
 
     // ── Vista ─────────────────────────────────────────────────────────────────
     private EstudianteView vista;
@@ -61,16 +60,24 @@ public class EstudianteController implements IBuscador {
         buscarPorCarrera(carrera);
     }
 
-    public void buscarEstudiantePorEstado(String estado) {
-        if (estado == null || estado.isEmpty() || estado.equals("Seleccionar...")) {
+    public void buscarEstudiantePorEstado(String estadoStr) {
+        if (estadoStr == null || estadoStr.isEmpty() || estadoStr.equals("Seleccionar...")) {
             vista.mostrarError("Por favor seleccione un estado para buscar.");
+            return;
+        }
+
+        EstadoMatricula estadoBuscado;
+        try {
+            estadoBuscado = EstadoMatricula.valueOf(estadoStr.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            vista.mostrarError("Estado no válido.");
             return;
         }
 
         List<Estudiante> resultados = new ArrayList<>();
 
         for (Estudiante e : estudiantes) {
-            if (e != null && e.getEstadoMatricula().equalsIgnoreCase(estado)) {
+            if (e != null && e.getEstadoMatricula() == estadoBuscado) {
                 resultados.add(e);
             }
         }
@@ -82,8 +89,8 @@ public class EstudianteController implements IBuscador {
         }
     }
 
-    public boolean actualizarEstadoEstudiante(int idEstudiante, String nuevoEstado) {
-        if (nuevoEstado == null || nuevoEstado.trim().isEmpty() || nuevoEstado.equals("Seleccionar...")) {
+    public boolean actualizarEstadoEstudiante(int idEstudiante, String nuevoEstadoStr) {
+        if (nuevoEstadoStr == null || nuevoEstadoStr.trim().isEmpty() || nuevoEstadoStr.equals("Seleccionar...")) {
             vista.mostrarError("Por favor seleccione un estado válido.");
             return false;
         }
@@ -94,9 +101,15 @@ public class EstudianteController implements IBuscador {
             return false;
         }
 
-        estudiante.setEstadoMatricula(nuevoEstado);
-        vista.mostrarMensaje("El estado del estudiante " + estudiante.getNombre() + " ha sido actualizado a: " + nuevoEstado);
-        return true;
+        try {
+            EstadoMatricula nuevoEstado = EstadoMatricula.valueOf(nuevoEstadoStr.toUpperCase());
+            estudiante.setEstadoMatricula(nuevoEstado);
+            vista.mostrarMensaje("El estado del estudiante " + estudiante.getNombre() + " ha sido actualizado a: " + nuevoEstado);
+            return true;
+        } catch (IllegalArgumentException e) {
+            vista.mostrarError("El estado ingresado no es válido.");
+            return false;
+        }
     }
 
     public void verEstudiantesDelCurso(String nombreCurso) {
@@ -132,18 +145,18 @@ public class EstudianteController implements IBuscador {
 
         Estudiante.reiniciarContador();
 
-        estudiantes[0]  = new Estudiante(1,  "Ana ","García",        "Ingeniería de Sistemas",   4.5, "Activo");
-        estudiantes[1]  = new Estudiante(2,  "Carlos"," López",      "Ingeniería Civil",         3.8, "Activo");
-        estudiantes[2]  = new Estudiante(3,  "María", "Rodríguez",   "Medicina",                 4.9, "Activo");
-        estudiantes[3]  = new Estudiante(4,  "José ","Martínez",     "Derecho",                  3.5, "Activo");
-        estudiantes[4]  = new Estudiante(5,  "Laura ","Sánchez",     "Administración",           4.1, "Activo");
-        estudiantes[5]  = new Estudiante(6,  "Andrés ","Torres",     "Ingeniería de Sistemas",   3.9, "Activo");
-        estudiantes[6]  = new Estudiante(7,  "Valentina ","Gómez",   "Psicología",               4.3, "Activo");
-        estudiantes[7]  = new Estudiante(8,  "Luis ","Herrera",      "Economía",                 3.7, "Activo");
-        estudiantes[8]  = new Estudiante(9,  "Sofía ","Díaz",        "Ingeniería Civil",         4.6, "Activo");
-        estudiantes[9]  = new Estudiante(10, "Juliana ","Morales",   "Medicina",                 4.8, "Activo");
-        estudiantes[10] = new Estudiante(11, "Ana Milena ","Ruiz",    "Derecho",                  4.0, "Activo");
-        estudiantes[11] = new Estudiante(12, "Carlos Andrés ","Paz", "Administración",           3.6, "Activo");
+        estudiantes[0]  = new Estudiante(1,  "Ana", "García",         "Ingeniería de Sistemas",   4.5, EstadoMatricula.ACTIVO);
+        estudiantes[1]  = new Estudiante(2,  "Carlos", "López",       "Ingeniería Civil",         3.8, EstadoMatricula.ACTIVO);
+        estudiantes[2]  = new Estudiante(3,  "María", "Rodríguez",    "Medicina",                 4.9, EstadoMatricula.ACTIVO);
+        estudiantes[3]  = new Estudiante(4,  "José", "Martínez",      "Derecho",                  3.5, EstadoMatricula.ACTIVO);
+        estudiantes[4]  = new Estudiante(5,  "Laura", "Sánchez",      "Administración",           4.1, EstadoMatricula.ACTIVO);
+        estudiantes[5]  = new Estudiante(6,  "Andrés", "Torres",      "Ingeniería de Sistemas",   3.9, EstadoMatricula.ACTIVO);
+        estudiantes[6]  = new Estudiante(7,  "Valentina", "Gómez",    "Psicología",               4.3, EstadoMatricula.ACTIVO);
+        estudiantes[7]  = new Estudiante(8,  "Luis", "Herrera",       "Economía",                 3.7, EstadoMatricula.ACTIVO);
+        estudiantes[8]  = new Estudiante(9,  "Sofía", "Díaz",         "Ingeniería Civil",         4.6, EstadoMatricula.ACTIVO);
+        estudiantes[9]  = new Estudiante(10, "Juliana", "Morales",    "Medicina",                 4.8, EstadoMatricula.ACTIVO);
+        estudiantes[10] = new Estudiante(11, "Ana Milena", "Ruiz",    "Derecho",                  4.0, EstadoMatricula.ACTIVO);
+        estudiantes[11] = new Estudiante(12, "Carlos Andrés", "Paz",  "Administración",           3.6, EstadoMatricula.ACTIVO);
         
         this.cursosDisponibles = new ArrayList<>();
         Curso curso1 = new Curso("Cosmetología y Uñas", 3);
@@ -178,10 +191,7 @@ public class EstudianteController implements IBuscador {
         estudiantes[2].inscribir(curso3);
         estudiantes[5].inscribir(curso2);
         estudiantes[8].inscribir(curso3);
-
-        System.out.println("Total de estudiantes cargados: " + Estudiante.getTotalEstudiantes());
     }
-    
     
     // ── Lógica de Inscripción ─────────────────────────────────────────────────
     public boolean inscribirEstudianteACurso(int idEstudiante, String nombreCurso) {
@@ -218,7 +228,6 @@ public class EstudianteController implements IBuscador {
 
     // ── Lógica de búsqueda ────────────────────────────────────────────────────
 
-  
     private void buscarPorCriterio(String criterio) {
         if (criterio == null || criterio.isEmpty()) {
             vista.mostrarError(MENSAJE_BUSQUEDA_VACIA);
@@ -244,7 +253,6 @@ public class EstudianteController implements IBuscador {
             vista.mostrarEstudiantes(convertirAFilas(resultados));
         }
     }
-
    
     private void buscarPorCarrera(String carrera) {
         if (carrera == null || carrera.isEmpty() || carrera.equals("Seleccionar...")) {
@@ -262,7 +270,6 @@ public class EstudianteController implements IBuscador {
 
         vista.mostrarEstudiantes(convertirAFilas(resultados));
     }
-
     
     private Object[] convertirAFila(Estudiante e) {
         return new Object[]{
@@ -271,11 +278,10 @@ public class EstudianteController implements IBuscador {
             e.getApellido(),
             e.getCarrera(),
             String.format("%.2f", e.getPromedio()),
-            e.getEstadoMatricula()
+            e.getEstadoMatricula().toString()
         };
     }
 
-  
     private List<Object[]> convertirAFilas(List<Estudiante> lista) {
         List<Object[]> filas = new ArrayList<>();
         for (Estudiante e : lista) {
@@ -286,7 +292,7 @@ public class EstudianteController implements IBuscador {
 
     public Estudiante obtenerEstudiantePorId(int id) {
         for (Estudiante e : estudiantes) {
-            if (e.getId() == id) {
+            if (e != null && e.getId() == id) {
                 return e;
             }
         }
@@ -305,17 +311,23 @@ public class EstudianteController implements IBuscador {
         }
         return carreras.toArray(new String[0]);
     }
-
  
     public final int obtenerTotalEstudiantes() {
         return Estudiante.getTotalEstudiantes();
     }
 
-   
-    public boolean agregarEstudiante(String nombre, String apellido, String carrera, double promedio, String estadoMatricula) {
+    public boolean agregarEstudiante(String nombre, String apellido, String carrera, double promedio, String estadoMatriculaStr) {
         if (nombre == null || nombre.isEmpty() || apellido == null || apellido.isEmpty() ||
-            carrera == null || carrera.isEmpty() || estadoMatricula == null || estadoMatricula.isEmpty()) {
+            carrera == null || carrera.isEmpty() || estadoMatriculaStr == null || estadoMatriculaStr.isEmpty()) {
             vista.mostrarError("Todos los campos son obligatorios.");
+            return false;
+        }
+
+        EstadoMatricula estadoMatricula;
+        try {
+            estadoMatricula = EstadoMatricula.valueOf(estadoMatriculaStr.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            vista.mostrarError("Estado de matrícula no válido.");
             return false;
         }
 
@@ -326,7 +338,6 @@ public class EstudianteController implements IBuscador {
         }
 
         int indiceNuevoEstudiante = Estudiante.getTotalEstudiantes();
-
         int proximoId = Estudiante.getProximoId();
         Estudiante nuevoEstudiante = new Estudiante(proximoId, nombre, apellido, carrera, promedio, estadoMatricula);
 
@@ -338,7 +349,7 @@ public class EstudianteController implements IBuscador {
         return true;
     }
 
-    // ── Lógica de Profesores ──────────────────────────────────────────────────
+    // ── Lógica de Profesores ────────────────────────────────________________  
 
     public boolean agregarProfesor(String nombre, double salario) {
         if (nombre == null || nombre.trim().isEmpty()) {

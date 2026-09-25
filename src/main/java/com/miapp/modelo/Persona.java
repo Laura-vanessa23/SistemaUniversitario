@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.miapp.modelo;
-
+//editar apellido como atributo de persona
 /**
  *
  * @author Estudiante
@@ -12,6 +12,7 @@ public abstract class Persona {
     private String nombre;
     private String apellido;
     protected int id;
+    
 
     public Persona() {
     }

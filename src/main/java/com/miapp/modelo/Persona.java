@@ -8,22 +8,21 @@ package com.miapp.modelo;
  *
  * @author Estudiante
  */
-public abstract class  Persona {
+public abstract class Persona {
     private String nombre;
+    private String apellido;
     protected int id;
 
     public Persona() {
     }
 
-    public Persona(String nombre, int id) {
+    public Persona(String nombre, String apellido, int id) {
         this.nombre = nombre;
+        this.apellido = apellido;
         this.id = id;
     }
     
-    
     public abstract double calcularPago();
-           
-        
 
     public String getNombre() {
         return nombre;
@@ -33,6 +32,14 @@ public abstract class  Persona {
         this.nombre = nombre;
     }
 
+    public String getApellido() {
+        return apellido;
+    }
+
+    public void setApellido(String apellido) {
+        this.apellido = apellido;
+    }
+
     public int getId() {
         return id;
     }
@@ -40,9 +47,5 @@ public abstract class  Persona {
     public void setId(int id) {
         this.id = id;
     }
-    
-    
-    
-    }
-    
+}
 

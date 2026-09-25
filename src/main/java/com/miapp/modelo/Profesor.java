@@ -11,9 +11,9 @@ import java.util.List;
  *
  * @author Estudiante
  */
-public  class  Profesor extends Persona {
-     private final  double salarioBase ;
-     private List<Curso> cursosAsignados;
+public class Profesor extends Persona {
+    private final double salarioBase;
+    private List<Curso> cursosAsignados;
 
     public Profesor() {
         super();
@@ -21,8 +21,8 @@ public  class  Profesor extends Persona {
         this.cursosAsignados = new ArrayList<>();
     }
 
-    public Profesor(double salarioBase, String nombre, int id) {
-        super(nombre, id);
+    public Profesor(double salarioBase, String nombre, String apellido, int id) {
+        super(nombre, apellido, id);
         this.salarioBase = salarioBase;
         this.cursosAsignados = new ArrayList<>();
     }
@@ -31,7 +31,6 @@ public  class  Profesor extends Persona {
         return salarioBase;
     }
 
-    
     public List<Curso> getCursosAsignados() {
         return cursosAsignados;
     }
@@ -40,17 +39,14 @@ public  class  Profesor extends Persona {
         this.cursosAsignados = cursosAsignados;
     }
 
-    
     @Override
     public double calcularPago() {
-        return salarioBase;
+        int horasSemanales = 40;
+        double pagoPorHora = 50000.0;
+        return this.salarioBase + (horasSemanales * pagoPorHora);
     }
     
     public void impartirClase() {
-        System.out.print("El profesor " + getNombre() + "esta impartiendo su clase ");
+        System.out.print("El profesor " + getNombre() + " esta impartiendo su clase ");
     }
-    
-   
-     
-    
 }

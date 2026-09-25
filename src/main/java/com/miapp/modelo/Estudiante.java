@@ -1,3 +1,7 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package com.miapp.modelo;
 
 import com.miapp.servicios.Inscribible;
@@ -15,18 +19,18 @@ public final class Estudiante extends Persona implements Inscribible {
     public static final int MAX_MATERIAS = 9 ;
     
     // ── Atributos de instancia ────────────────────────────────────────────────
-    private String apellido;
     private String carrera;
     private double promedio;
+    private String estadoMatricula;
     private List<Curso> cursosInscritos;
     
 
     // ── Constructor ───────────────────────────────────────────────────────────
 
-   public Estudiante(int id, String nombre, String apellido, String carrera, double promedio) {
-        super(nombre, id); // Usamos 'super' para enviarle nombre e id a la clase Persona
-        this.apellido = apellido;
+    public Estudiante(int id, String nombre, String apellido, String carrera, double promedio, String estadoMatricula) {
+        super(nombre, apellido, id); // Usamos 'super' para enviar nombre, apellido e id a la clase Persona
         this.carrera  = carrera;
+        this.estadoMatricula = estadoMatricula;
         this.cursosInscritos = new ArrayList<>(); // Inicializamos la lista de cursos
    
         if (promedio >= PROMEDIO_MINIMO && promedio <= PROMEDIO_MAXIMO) {
@@ -55,10 +59,6 @@ public final class Estudiante extends Persona implements Inscribible {
 
     // ── Getters ──────────────────────────────────────────────────────────────
 
-    public String getApellido() {
-        return apellido;
-    }
-
     public String getCarrera() { 
         return carrera; 
     }
@@ -67,15 +67,22 @@ public final class Estudiante extends Persona implements Inscribible {
         return promedio; 
     }
 
-    // ── Setters ──────────────────────────────────────────────────────────────
-
-
-    public void setApellido(String apellido) { 
-        this.apellido = apellido; 
+    public String getEstadoMatricula() {
+        return estadoMatricula;
     }
+
+    public List<Curso> getCursosInscritos() {
+        return cursosInscritos;
+    }
+
+    // ── Setters ──────────────────────────────────────────────────────────────
 
     public void setCarrera(String carrera) { 
         this.carrera = carrera; 
+    }
+
+    public void setEstadoMatricula(String estadoMatricula) {
+        this.estadoMatricula = estadoMatricula;
     }
 
     /**
@@ -83,7 +90,6 @@ public final class Estudiante extends Persona implements Inscribible {
      * @param p promedio a validar (debe estar entre PROMEDIO_MINIMO y PROMEDIO_MAXIMO)
      */
     public void setPromedio(double p) {
-        // nuevo: Uso de constantes finales para validación
         if (p >= PROMEDIO_MINIMO && p <= PROMEDIO_MAXIMO) {
             this.promedio = p;
         }
@@ -93,18 +99,17 @@ public final class Estudiante extends Persona implements Inscribible {
      Método final: no puede ser sobrescrito por subclases
      */
     
-    
     public final String toString() {
         return "ID: " + id
              + " | Nombre: " + getNombre()
-             + " | Apellido: " + apellido   
+             + " | Apellido: " + getApellido()    
              + " | Carrera: " + carrera
-             + " | Promedio: " + String.format("%.2f", promedio);
+             + " | Promedio: " + String.format("%.2f", promedio)
+             + " | Estado: " + estadoMatricula;
     }
 
     @Override
     public boolean inscribir(Curso curso) {
-        // Validamos que no supere el máximo de materias y que no esté ya inscrito
         if (cursosInscritos.size() < MAX_MATERIAS && !cursosInscritos.contains(curso)) {
             cursosInscritos.add(curso);
             curso.agregarEstudiante(this); // Mantiene la relación bidireccional N:M
@@ -115,11 +120,6 @@ public final class Estudiante extends Persona implements Inscribible {
 
     @Override
     public double calcularPago() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return 0.0;
     }
-
-    boolean contains(Estudiante estudiantes) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
 }
